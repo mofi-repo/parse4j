@@ -19,7 +19,9 @@ public class Parse {
 
 	private static String mApplicationId;
 	private static String mRestAPIKey;
+	private static String mMasterKey;
 	private static final DateFormat dateFormat;
+	private static boolean rootMode;
 
 	static {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -32,11 +34,30 @@ public class Parse {
 	static public void initialize(String applicationId, String restAPIKey) {
 		mApplicationId = applicationId;
 		mRestAPIKey = restAPIKey;
+		rootMode = false;
 	}
+	
+
+    /**
+     * Don't use it in client app! Use it only if know what you are doing.
+     * If someone get your master key he can bypass all of your app's security!
+     *
+     * @param applicationId your app id
+     * @param masterKey your master key
+     */
+    static public void initializeAsRoot (String applicationId, String masterKey) {
+        mApplicationId = applicationId;
+        mMasterKey = masterKey;
+        rootMode = true;
+    }
 
 	static public String getApplicationId() {
 		return mApplicationId;
 	}
+	
+    public static boolean isRootMode() {
+        return rootMode;
+    }
 
 	static public String getRestAPIKey() {
 		return mRestAPIKey;
@@ -58,6 +79,10 @@ public class Parse {
 			return null;
 		}
 	}
+	
+    public static String getMasterKey() {
+        return mMasterKey;
+    }
 
 	public static boolean isInvalidKey(String key) {
 		return "objectId".equals(key) || "createdAt".equals(key)
